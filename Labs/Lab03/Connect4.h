@@ -1,4 +1,4 @@
-#ifndef CONNECT4_H
+#ifdef CONNECT4_H 
 #define CONNECT4_H
 
 #include <iostream>
@@ -10,61 +10,110 @@ namespace oopl {
 
     class C4Board {
         private:
-        std::string grid; // Private field to represent the game grid
-        int player; // Private field to represent the current player
+        std::string grid; // Represents the 6x7 grid as a single string of 42 characters 
+        int player;       // Current player (0, 1 or 2)
 
         public: 
-        static const std::string discs; // Public static constant field for player discs 
+        static const std::string discs; // Discs for players: 'O','X','S' 
 
         // Default constructor 
-        C4Board(){
-            //Initialize grid with 42 asterisks and play to 0
+        C4Board() : grid(42, '*'), player(0){}
+
+        // Copy constructor 
+        C4Board(const C4Board& other) : grid(other.grid), player(other.player) {}
+
+        // Assignment operator
+        C4Board& operator=(const C4Board& other) {
+            if (this != &other) {
+                grid = other.grid;
+                player = other.player;
+            }
+            return *this; 
+        }
+
+        // Destructor
+        ~C4Board() {}
+
+        // Returns the current player (1, 2, or 3)
+        int current() const {
+            return player + 1; 
+        }
+
+        // Returns the grid element at the given index, or '*' if the index is invalid 
+        char value(int index) const {
+            if (index >=0 && index < 42) {
+                return grid[index]; 
+            }
+            return '*', 
+        }
+
+        // Returns true if the grid is full (no asterisks), otherwise false 
+        bool full() const {
+            return grid.find('*') == std::string::npos; 
+        }
+        
+        // Returns true if the grid is empty (all asterisks), otherwise false 
+        bool empty() const {
+            return grid.find_first_not_of('*')== std::string::npos; 
+        }
+
+        // Returns true if the column has available space, otherwise false 
+        bool space(int col) const {
+            if (col < 0 || col > 6) return false; 
+            return grid[col] == '*';
+        }
+
+        // Switches to the next player 
+        void next() {
+            player = (player + 1) % 3; 
+        }
+
+        // Returns the disc of the current player 
+        char disc() const {
+            return discs[player]; 
+        } 
+
+        // Inserts the current player's disc into the specified column 
+        bool set(int col) {
+            if (col < 0 || col > 6 || !space(col)) return false;
+
+            for (int row = 5; row >= 0; --row) {
+                int index = row * 7 + col;
+                if (grid[index] == '*') {
+                    grid[index] = disc(); 
+                    return true; 
+                }
+            }
+            return false; 
+        }
+
+        // Resets the grid and player 
+        void reset() {
             grid = std::string(42, '*');
             player = 0; 
         }
 
-        // Copy constructor 
-        C4Board(const C4Board& other){
-            // Copy the grid and player from the other instance
-            grid = other.grid;
-            player = other.player;
-        }
-
-        // Assignment operator
-        C4Board& operator=(const C4Board& other) {
-            // Check for self-assignment 
-            if (this != &other) {
-                grid = other.grid; // Copy the grid 
-                player = other.player; // Copy the player
+        // Returns a string representation of the grid 
+        std::string toString() const {
+            std::ostringstream oss; 
+            for (int row = 0; row < 6; ++row) {
+                for (int col = 0; col < 7; ++col) {
+                    oss << std::setw(2) << grid[row * 7 + col]; 
+                }
+                oss << "\n";
             }
-
-            return *this; // Return the current instance
+            return oss.str(); 
         }
 
-        // Destructor 
-        ~C4Board() {
-
-            // Empty destructor
-    }
-
-    // Method to get the current player 
-    // Returns the current player (range [1,3])
-    int current() const {
-        return player; // Return the current player 
-    }
-
-    // Method to get the value at a specific index 
-    // Returns the grid element at the specified index if valid, otherwise returns '*'
-    char value(int index) const {
-        if (index >=0 && index < 42) {
-            return grid[index]; // Return the grid element at the index
+        // Friend function to overload the << operator 
+        friend std::ostream& operator<<(std::ostream& os, const C4Board& board) {
+            os << board.toString();
+            return os; 
         }
-        return '*'; // Return '*' if index is out of range 
-    }
-}; 
+    }; 
 
-// Initialize the static constant field 
-const std::string C4Board::discs = "OXS";
+    // Initialize the static member 
+    const std::string C4Board::discs = "OXS"; 
 
-} // namespace oopl
-#endif // CONNECT4_H
+} // namespace oopl 
+#endif // CONNECT4_H 
