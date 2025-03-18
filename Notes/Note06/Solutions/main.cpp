@@ -3,8 +3,8 @@
 int main() 
 {
     oopn::DerivedA a;
-    oopn::DerivedB b;
-    oopn::DerivedC c;
 
+    a.Base::publicMethod();
+    a.publicMethod();
     return 0;
 }

@@ -50,6 +50,12 @@ namespace oopn
             std::cout << "This is the derived A class destructor\n";
         }
         
+        //Overridden Method
+        void publicMethod()
+        {
+            std::cout << "This is the derived A class public method\n"; 
+        }
+
         void DerivedPublicMethod() 
         {
             std::cout << "This is a derived public method that invokes the base public method\n";
@@ -61,15 +67,9 @@ namespace oopn
             std::cout << "This is a derived public method that invokes the base protected method\n";
             Base::protectedMethod();
         }
-
-        void DerivedPrivateMethod() 
-        {
-            std::cout << "This is a derived public method that invokes the base private method\n";
-            Base::privateMethod();
-        }
-    
     };
-    class DerivedB : private Base 
+
+    class DerivedB : public Base 
     {
         
         public:
@@ -94,9 +94,12 @@ namespace oopn
             std::cout << "This is a derived public method that invokes the base protected method\n";
             Base::protectedMethod();
         }
+
+        protected:
+        using Base::publicMethod;
     };
 
-    class DerivedC : protected Base 
+    class DerivedC : public Base 
     {
         public:
         DerivedC() 
@@ -119,7 +122,10 @@ namespace oopn
         {
             std::cout << "This is a derived public method that invokes the base protected method\n";
             Base::protectedMethod();
-        }        
+        }      
+        private:
+        using Base::publicMethod;
+        using Base::protectedMethod;  
     };
 }
 #endif
