@@ -1,3 +1,5 @@
+import java.text.DecimalFormat;
+
 class Circle 
 {
     private double radius;
@@ -36,16 +38,26 @@ class Circle
 
     public double area() {return PI * radius * radius;}
 
-    @override
+    @Override
     public String toString() 
     {
+        DecimalFormat two = new DecimalFormat("####.00");
         String out;
-        out = "(" + radius + ")";
+
+        out = "(" + two.format(radius) + ")";
         return out;
     }
 
     static
     {
         PI = 3.1415926;
+    }
+
+    public static void main(String[] args) 
+    {
+        Circle c1 = new Circle(), c2 = new Circle(6);
+        System.out.println(c1 + "\n" + c2);
+        System.out.println("(" + c1.area() + "," + c1.circumference() + ")");
+        System.out.println("(" + c2.area() + "," + c2.circumference() + ")");
     }
 }
